@@ -2,7 +2,7 @@
 {
     public class Passenger
     {
-        public string? PK { get; set; }
+        public string? PassengerKey { get; set; }
         public string? FlightKey { get; set; }
         public string? Pnr { get; set; }
         public string? FirstName { get; set; }

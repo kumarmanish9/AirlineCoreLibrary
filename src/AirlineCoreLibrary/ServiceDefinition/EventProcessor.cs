@@ -43,14 +43,14 @@ namespace AirlineCoreLibrary.ServiceDefinition
                                     AppLogger.LogInfo($"Processing Flight Event, EventId: {fileName}");
 
                                     // Example: Save/Update flight details
-                                    flightEvent.Flight.PK = flightEvent.Flight.GenerateFlightKey();
+                                    flightEvent.Flight.FlightKey = flightEvent.Flight.GenerateFlightKey();
                                     await database.SaveFlightAsync(flightEvent.Flight);
 
                                     // Example: Save/Update passenger details
                                     foreach (var passenger in flightEvent.Passengers)
                                     {
-                                        passenger.PK = passenger.GeneratePassengerKey();
-                                        passenger.FlightKey = flightEvent.Flight.PK;
+                                        passenger.PassengerKey = passenger.GeneratePassengerKey();
+                                        passenger.FlightKey = flightEvent.Flight.FlightKey;
                                         await database.SavePassengerAsync(passenger);
                                     }
                                 }
