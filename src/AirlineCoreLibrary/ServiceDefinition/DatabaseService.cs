@@ -46,7 +46,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
             AppLogger.LogInfo("Saving flight", flight);
 
             var query = @"
-            INSERT INTO Flight (FlightKey, FlightNumber, Departure, Arrival, ScheduledDate, NumberOfPax)
+            INSERT IGNORE INTO Flight (FlightKey, FlightNumber, Departure, Arrival, ScheduledDate, NumberOfPax)
             VALUES (@FlightKey, @FlightNumber, @Departure, @Arrival, @ScheduledDate, @NumberOfPax)";
 
             using (var connection = GetConnection())
@@ -73,7 +73,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
         {
             AppLogger.LogInfo("Saving passenger", passenger);
             var query = @"
-            INSERT INTO Passenger (PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, Compensation, Status)
+            INSERT IGNORE INTO Passenger (PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, Compensation, Status)
             VALUES (@PassengerKey, @FlightKey, @Pnr, @FirstName, @LastName, @Phone, @Email, @Compensation, @Status)";
 
             using (var connection = GetConnection())
@@ -99,15 +99,91 @@ namespace AirlineCoreLibrary.ServiceDefinition
         }
 
         /// <inheritdoc />
-        public Task<Task> UpdateFlightAsync(Flight flight)
+        public async Task<List<Flight>> GetFlightsAsync()
         {
-            throw new NotImplementedException();
+            // Example database query logic (adjust this based on your actual database context)
+            List<Flight> flights = [];
+
+            try
+            {
+                // Assume you are using ADO.NET or some ORM (e.g., Entity Framework)
+                // Sample query: SELECT * FROM Flights;
+                using (var connection = GetConnection())
+                {
+                    await connection.OpenAsync();
+                    string query = "SELECT * FROM Flight";
+                    var command = new MySqlCommand(query, connection);
+                    var reader = await command.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
+                    {
+                        var flight = new Flight
+                        {
+                            FlightKey = reader["FlightKey"].ToString(),
+                            FlightNumber = reader["FlightNumber"].ToString(),
+                            Departure = reader["Departure"].ToString(),
+                            Arrival = reader["Arrival"].ToString(),
+                            ScheduledDate = reader["ScheduledDate"].ToString(),
+                            NumberOfPax = reader["NumberOfPax"].ToString(),
+                        };
+                        flights.Add(flight);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error as appropriate
+                AppLogger.LogError("Error occurd while fetching flights",ex);
+            }
+
+            return flights;
         }
 
         /// <inheritdoc />
-        public Task<Task> UpdatePassengerAsync(Passenger passenger)
+        /// <inheritdoc />
+        public async Task<List<Passenger>> GetPassengersAsync(string flightKey)
         {
-            throw new NotImplementedException();
+            List<Passenger> passengers = [];
+
+            try
+            {
+                // Example database query logic (adjust this based on your actual database context)
+                using (var connection = GetConnection())
+                {
+                    await connection.OpenAsync();
+
+                    // Query to fetch passengers associated with the given flightKey
+                    string query = "SELECT * FROM Passenger WHERE FlightKey = @FlightKey"; // Adjust query as needed
+                    var command = new MySqlCommand(query, connection);
+                    command.Parameters.AddWithValue("@FlightKey", flightKey);
+                    var reader = await command.ExecuteReaderAsync();
+
+                    while (await reader.ReadAsync())
+                    {
+                        var passenger = new Passenger
+                        {
+                            PassengerKey = reader["PassengerKey"].ToString(),
+                            FlightKey = reader["FlightKey"].ToString(),
+                            Pnr = reader["Pnr"].ToString(),
+                            FirstName = reader["FirstName"].ToString(),
+                            LastName = reader["LastName"].ToString(),
+                            Phone = reader["Phone"].ToString(),
+                            Email = reader["Email"].ToString(),
+                            Compensation = reader["Compensation"].ToString(),
+                            Status = reader["Status"].ToString(),
+                        };
+                        passengers.Add(passenger);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the error as appropriate
+                AppLogger.LogError("Error occurd while fetching passengers", ex);
+            }
+
+            return passengers;
         }
+
     }
 }

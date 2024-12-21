@@ -21,13 +21,6 @@ namespace AirlineCoreLibrary.Service
         Task<Task> SaveFlightAsync(Flight flight);
 
         /// <summary>
-        /// Updates an existing flight record in the database.
-        /// </summary>
-        /// <param name="flight">The flight object containing the updated details of the flight.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        Task<Task> UpdateFlightAsync(Flight flight);
-
-        /// <summary>
         /// Saves a new passenger record to the database.
         /// </summary>
         /// <param name="passenger">The passenger object containing the details of the passenger to be saved.</param>
@@ -35,11 +28,19 @@ namespace AirlineCoreLibrary.Service
         Task<Task> SavePassengerAsync(Passenger passenger);
 
         /// <summary>
-        /// Updates an existing passenger record in the database.
+        /// Asynchronously retrieves a list of flights from the database.
         /// </summary>
-        /// <param name="passenger">The passenger object containing the updated details of the passenger.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        Task<Task> UpdatePassengerAsync(Passenger passenger);
+        /// <returns>A task representing the asynchronous operation, with a list of flights as the result.</returns>
+        Task<List<Flight>> GetFlightsAsync();
+
+        /// <summary>
+        /// Asynchronously retrieves a list of passengers associated with a specific flight from the database.
+        /// </summary>
+        /// <param name="flightKey">The key identifying the flight for which the passengers need to be fetched.</param>
+        /// <returns>A task representing the asynchronous operation, with a list of passengers as the result.</returns>
+        Task<List<Passenger>> GetPassengersAsync(string flightKey);
+
+
     }
 
 }

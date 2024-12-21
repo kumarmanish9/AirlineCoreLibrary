@@ -32,6 +32,10 @@ CREATE TABLE Passenger (
 );
 
 
+Select * from Flight;
+Select * from passenger;
+
+
 
 
 
