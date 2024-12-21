@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
-    public class EventPublisher : IEventPublisher
+    internal class EventPublisher : IEventPublisher
     {
         public async Task PublishFlightEventAsync()
         {
@@ -24,7 +24,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 // Write the JSON message to the file
                 await System.IO.File.WriteAllTextAsync(filePath, message);
 
-                Console.WriteLine($"Flight event successfully published to {filePath}");
+                Console.WriteLine($"Flight event successfully published to queue: EventPublisher, {DateTimeOffset.Now}");
             }
             catch (Exception ex)
             {
