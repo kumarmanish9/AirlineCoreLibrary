@@ -12,6 +12,7 @@ namespace AirlineCoreLibrary.Utility
             service.AddSingleton<IPassengerService, PassengerService>();
             service.AddSingleton<IEventPublisher, EventPublisher>();
             service.AddSingleton<IEventProcessor, EventProcessor>();
+            service.AddSingleton<IDatabaseService, DatabaseService>();
         }
     }
 }

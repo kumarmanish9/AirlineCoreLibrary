@@ -24,7 +24,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 // Write the JSON message to the file
                 await System.IO.File.WriteAllTextAsync(filePath, message);
 
-                Console.WriteLine($"Flight event successfully published to queue: EventPublisher, {DateTimeOffset.Now}");
+                AppLogger.LogInfo($"\nFlight event successfully published to queue: EventPublisher, {DateTimeOffset.Now}");
             }
             catch (Exception ex)
             {

@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
-    internal class EventProcessor : IEventProcessor
+    internal class EventProcessor(IDatabaseService database) : IEventProcessor
     {
         public async Task ProcessFlightEventAsync()
         {
@@ -36,46 +36,49 @@ namespace AirlineCoreLibrary.ServiceDefinition
                                 if (flightEvent?.Flight != null && flightEvent?.Passengers != null)
                                 {
                                     // Process the FlightEvent object (print details in this example)
-                                    Console.WriteLine($"Processing Flight Event from file: {filePath}");
+                                    AppLogger.LogInfo($"Processing Flight Event, EventId: {fileName}");
 
                                     // Example: Save/Update flight details
-
+                                    flightEvent.Flight.PK = flightEvent.Flight.GenerateFlightKey();
+                                    await database.SaveFlightAsync(flightEvent.Flight);
 
                                     // Example: Save/Update passenger details
                                     foreach (var passenger in flightEvent.Passengers)
                                     {
-                                        Console.WriteLine($"Passenger: {JsonConvert.SerializeObject(passenger)}");
+                                        passenger.PK = passenger.GeneratePassengerKey();
+                                        passenger.FlightKey = flightEvent.Flight.PK;
+                                        await database.SavePassengerAsync(passenger);
                                     }
                                 }
                                 else
                                 {
-                                    Console.WriteLine($"Failed to deserialize the FlightEvent: {fileName}");
+                                    AppLogger.LogWarning($"Failed to deserialize the EventId: {fileName}");
                                 }
                             }
                             catch (Exception ex)
                             {
                                 // Log or handle the error for this specific file
-                                Console.WriteLine($"An error occurred while processing the message: {ex.Message}");
+                                AppLogger.LogError($"An error occurred while processing the message", ex);
                             }
 
                             // Delete the file after processing
                             File.Delete(filePath);
-                            Console.WriteLine($"Events removed from Queue, event: {fileName}");
+                            AppLogger.LogInfo($"Events removed from queue, EventId: {fileName}");
                         }
                     }
                     else
                     {
-                        Console.WriteLine("No flight events found to process");
+                        AppLogger.LogInfo("No flight events found to process");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"Queue does not have message");
+                    AppLogger.LogInfo($"Queue does not have message");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while processing the flight events: {ex.Message}");
+                AppLogger.LogError($"An error occurred while processing the flight events", ex);
             }
         }
 
