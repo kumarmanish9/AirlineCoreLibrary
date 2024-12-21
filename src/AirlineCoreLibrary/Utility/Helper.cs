@@ -23,15 +23,15 @@ namespace AirlineCoreLibrary.Utility
             // Ensure ScheduledDate is not null and parse it into a DateTime object
             if (DateTime.TryParse(flight.ScheduledDate, out DateTime scheduledDate))
             {
-                // Format the date into MMDDYYYYHHMM
-                string formattedDate = scheduledDate.ToString("MMddyyyyHHmm");
+                // Format the date into MMDDYYYY
+                string formattedDate = scheduledDate.ToString("MMddyyyy");
 
                 // Generate the flight key using the formatted date
                 return $"{flight.FlightNumber}_{flight.Departure}_{formattedDate}";
             }
 
             // If the scheduled date is invalid, fallback to current date and time
-            return $"{flight.FlightNumber}_{flight.Departure}_{DateTime.Now.ToString("MMddyyyyHHmm")}";
+            return $"{flight.FlightNumber}_{flight.Departure}_{DateTime.Now.ToString("MMddyyyy")}";
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
 -- step 1:
-CREATE DATABASE AirlineCompanion;
+CREATE DATABASE FlyingTogether;
+
+---- Pass: Changelife@26
 
 -- Step 2: Use the Database
-USE AirlineCompanion;
+USE FlyingTogether;
 
 CREATE TABLE Flight (
     Id INT NOT NULL AUTO_INCREMENT,      -- Auto-incrementing primary key
