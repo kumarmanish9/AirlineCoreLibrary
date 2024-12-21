@@ -3,8 +3,12 @@ using AirlineCoreLibrary.Service;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
+    /// <summary>
+    /// Provides services for retrieving flight information.
+    /// </summary>
     public class FlightService : IFlightService
     {
+        /// <inheritdoc />
         public async Task<List<Flight>?> GetFlights()
         {
             try

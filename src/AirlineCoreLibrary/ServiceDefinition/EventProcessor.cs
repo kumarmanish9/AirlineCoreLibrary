@@ -5,8 +5,12 @@ using Newtonsoft.Json;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
+    /// <summary>
+    /// Processes flight-related events and interacts with the database service.
+    /// </summary>
     internal class EventProcessor(IDatabaseService database) : IEventProcessor
     {
+        /// <inheritdoc />
         public async Task ProcessFlightEventAsync()
         {
             try

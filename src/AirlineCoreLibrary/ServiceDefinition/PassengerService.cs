@@ -3,8 +3,12 @@ using AirlineCoreLibrary.Service;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
+    /// <summary>
+    /// Provides services for retrieving passenger information.
+    /// </summary>
     public class PassengerService : IPassengerService
     {
+        /// <inheritdoc />
         public async Task<List<Passenger>?> GetPassenger(Flight? flight)
         {
             try
@@ -31,6 +35,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
             }
         }
 
+        /// <inheritdoc />
         public async Task<List<Passenger>?> GetPassengerV2(Flight? flight)
         {
             try

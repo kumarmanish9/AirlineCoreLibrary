@@ -5,8 +5,12 @@ using Newtonsoft.Json;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
+    /// <summary>
+    /// Publishes flight-related events.
+    /// </summary>
     internal class EventPublisher : IEventPublisher
     {
+        /// <inheritdoc />
         public async Task PublishFlightEventAsync()
         {
             try
