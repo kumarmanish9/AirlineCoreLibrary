@@ -44,8 +44,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 // Predefined data for generating random passengers
                 var firstNames = new[] { "John", "Jane", "Robert", "Karen", "Emily", "Michael", "Sarah", "David", "Jessica", "Daniel" };
                 var lastNames = new[] { "Doe", "Smith", "Brown", "Perez", "Johnson", "Lee", "Martinez", "Garcia", "Hernandez", "Taylor" };
-                var Compensationes = new[] { "Booked", "Not Booked" };
-                var mealStatuses = new[] { "Vegetarian", "Non-Vegetarian", "Vegan" };
+                var Compensationes = new[] { "Hotel", "Meal", "Hotel+Meal", "Voucher", "Miles" };
                 var Statuses = new[] { "Accepted", "Rejected" };
 
                 // Generate the list of passengers
