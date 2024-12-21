@@ -31,7 +31,6 @@ CREATE TABLE Passenger (
     PRIMARY KEY (Id)                         -- Primary key on Id
 );
 
-
 Select * from Flight;
 Select * from passenger;
 

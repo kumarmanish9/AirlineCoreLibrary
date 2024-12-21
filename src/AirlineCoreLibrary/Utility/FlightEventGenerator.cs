@@ -13,7 +13,7 @@ namespace AirlineCoreLibrary.Utility
             var departure = DataProvider.Departures[_random.Next(DataProvider.Departures.Length)];
             var arrival = DataProvider.Arrivals.Except(new[] { departure }).ElementAt(_random.Next(DataProvider.Arrivals.Length - 1));// Ensure arrival != departure
             var scheduledDate = DateTime.Now.AddDays(_random.Next(1, 2)).ToString("yyyy-MM-dd"); // Random future date
-            var numberOfPax = _random.Next(1, 5).ToString(); // Random number of passengers (1-5)
+            var numberOfPax = _random.Next(1, 50).ToString(); // Random number of passengers (1-5)
 
             var flight = new Flight
             {
