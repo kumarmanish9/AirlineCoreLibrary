@@ -7,9 +7,7 @@
         public string? LastName { get; set; }
         public string? Phone { get; set; }
         public string? Email { get; set; }
-        public string? HotelStatus { get; set; }
-        public string? MealStatus { get; set; }
-        public string? OfferStatus { get; set; }
-
+        public string? Compensation { get; set; }
+        public string? Status { get; set; }
     }
 }

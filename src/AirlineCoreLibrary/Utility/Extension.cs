@@ -6,10 +6,11 @@ namespace AirlineCoreLibrary.Utility
 {
     public static class Extension
     {
-        public static void AddMyDependency(this IServiceCollection service)
+        public static void RegisterAppServices(this IServiceCollection service)
         {
             service.AddSingleton<IFlightService, FlightService>();
             service.AddSingleton<IPassengerService, PassengerService>();
+            service.AddSingleton<IEventPublisher, EventPublisher>();
         }
     }
 }

@@ -11,15 +11,15 @@ namespace AirlineCoreLibrary.ServiceDefinition
             {
                 var passengers = new List<Passenger>()
                 {
-                    new Passenger() { Pnr = "PNR001", FirstName = "John", LastName = "Doe", Phone = "1234567890", Email = "john.doe@example.com", HotelStatus = "Booked", MealStatus = "Vegetarian", OfferStatus = "Accepted" },
-                    new Passenger() { Pnr = "PNR002", FirstName = "Jane", LastName = "Smith", Phone = "2345678901", Email = "jane.smith@example.com", HotelStatus = "Not Booked", MealStatus = "Non-Vegetarian", OfferStatus = "Rejected" },
-                    new Passenger() { Pnr = "PNR003", FirstName = "Robert",LastName = "Brown", Phone = "", Email = "robert.brown@example.com", HotelStatus = "Booked", MealStatus = "Vegan", OfferStatus = "Accepted" },
-                    new Passenger() { Pnr = "PNR004", FirstName = "Emily", LastName = "White", Phone = "4567890123", Email = "avl", HotelStatus = "Not Booked", MealStatus = "Vegetarian", OfferStatus = "Accepted" },
-                    new Passenger() { Pnr = "PNR006", FirstName = "Sarah", LastName = "Taylor", Phone = "", Email = "sarah.taylor@example.com", HotelStatus = "Not Booked", MealStatus = "Vegan", OfferStatus = "Rejected" },
-                    new Passenger() { Pnr = "PNR007", FirstName = "David", LastName = "Harris", Phone = "7890123456", Email = "david.harris@example.com", HotelStatus = "Booked", MealStatus = "Non-Vegetarian", OfferStatus = "Accepted" },
-                    new Passenger() { Pnr = "PNR008", FirstName = "Linda", LastName = "Martin", Phone = "", Email = "linda.martin@example.com", HotelStatus = "Not Booked", MealStatus = "Vegetarian", OfferStatus = "Pending" },
-                    new Passenger() { Pnr = "PNR009", FirstName = "James", LastName = "Lee", Phone = "9012345678", Email = "", HotelStatus = "Booked", MealStatus = "Non-Vegetarian", OfferStatus = "Accepted" },
-                    new Passenger() { Pnr = "PNR010", FirstName = "Karen", LastName = "Perez", Phone = "0123456789", Email = "karen.perez@example.com", HotelStatus = "Not Booked", MealStatus = "Vegan", OfferStatus = "Rejected" }
+                    new Passenger() { Pnr = "PNR001", FirstName = "John", LastName = "Doe", Phone = "1234567890", Email = "john.doe@example.com", Compensation = "Hotel", Status = "Accepted" },
+                    new Passenger() { Pnr = "PNR002", FirstName = "Jane", LastName = "Smith", Phone = "2345678901", Email = "jane.smith@example.com", Compensation = "Meal", Status = "Rejected" },
+                    new Passenger() { Pnr = "PNR003", FirstName = "Robert",LastName = "Brown", Phone = "", Email = "robert.brown@example.com", Compensation = "Meal", Status = "Accepted" },
+                    new Passenger() { Pnr = "PNR004", FirstName = "Emily", LastName = "White", Phone = "4567890123", Email = "avl", Compensation = "Meal", Status = "Accepted" },
+                    new Passenger() { Pnr = "PNR006", FirstName = "Sarah", LastName = "Taylor", Phone = "", Email = "sarah.taylor@example.com", Compensation = "Hotel+Meal",  Status = "Rejected" },
+                    new Passenger() { Pnr = "PNR007", FirstName = "David", LastName = "Harris", Phone = "7890123456", Email = "david.harris@example.com", Compensation = "Hotel+Meal", Status = "Accepted" },
+                    new Passenger() { Pnr = "PNR008", FirstName = "Linda", LastName = "Martin", Phone = "", Email = "linda.martin@example.com", Compensation = "Hotel+Meal", Status = "Pending" },
+                    new Passenger() { Pnr = "PNR009", FirstName = "James", LastName = "Lee", Phone = "9012345678", Email = "", Compensation = "Booked", Status = "Mal" },
+                    new Passenger() { Pnr = "PNR010", FirstName = "Karen", LastName = "Perez", Phone = "0123456789", Email = "karen.perez@example.com", Compensation = "Meal", Status = "Rejected" }
                 };
 
                 return passengers;
@@ -36,7 +36,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
             try
             {
                 // Create a random number generator
-                Random random = new Random();
+                Random random = new ();
 
                 // Define random count between 5 and 20
                 int passengerCount = random.Next(5, 21);
@@ -44,9 +44,9 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 // Predefined data for generating random passengers
                 var firstNames = new[] { "John", "Jane", "Robert", "Karen", "Emily", "Michael", "Sarah", "David", "Jessica", "Daniel" };
                 var lastNames = new[] { "Doe", "Smith", "Brown", "Perez", "Johnson", "Lee", "Martinez", "Garcia", "Hernandez", "Taylor" };
-                var hotelStatuses = new[] { "Booked", "Not Booked" };
+                var Compensationes = new[] { "Booked", "Not Booked" };
                 var mealStatuses = new[] { "Vegetarian", "Non-Vegetarian", "Vegan" };
-                var offerStatuses = new[] { "Accepted", "Rejected" };
+                var Statuses = new[] { "Accepted", "Rejected" };
 
                 // Generate the list of passengers
                 var passengers = new List<Passenger>();
@@ -59,9 +59,8 @@ namespace AirlineCoreLibrary.ServiceDefinition
                         LastName = lastNames[random.Next(lastNames.Length)],
                         Phone = random.Next(100000000, 999999999).ToString(), // Generate a 10-digit phone number
                         Email = $"{Guid.NewGuid().ToString().Substring(0, 5)}@example.com", // Randomized email
-                        HotelStatus = hotelStatuses[random.Next(hotelStatuses.Length)],
-                        MealStatus = mealStatuses[random.Next(mealStatuses.Length)],
-                        OfferStatus = offerStatuses[random.Next(offerStatuses.Length)],
+                        Compensation = Compensationes[random.Next(Compensationes.Length)],
+                        Status = Statuses[random.Next(Statuses.Length)],
                     };
                     passengers.Add(passenger);
                 }
