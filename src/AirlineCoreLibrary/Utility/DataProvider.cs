@@ -102,8 +102,30 @@
             "Hotel", "Meal", "Hotel+Meal", "Voucher", "Miles"
         ];
 
-        public static string[] Status = [
-            "Offered", "Not-Offered", "Pending", "Accepted", "Declined", "Voided"
+        public static string[] CompStatus = [
+            "Offered", "NotOffered", "Pending", "Accepted", "Declined", "Voided"
         ];
+
+        public static string[] EventType = [
+            "Controllable", "Uncontrollable"
+        ];
+
+        public static string[] EventReason = [
+            "Cancel", "Delay", "Unknown"
+        ];
+
+        public static string[] NotificationType = [
+            "Email"
+        ];
+
+        public static string[] CabinType = [
+            "Economy", "Premium", "Business"
+        ];
+
+        public static string[] PaxStatus = [
+            "Gold", "Silver", "Platinum", "General"
+        ];
+
+
     }
 }

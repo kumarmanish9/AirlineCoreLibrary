@@ -25,7 +25,14 @@ namespace AirlineCoreLibrary.Service
         /// </summary>
         /// <param name="passenger">The passenger object containing the details of the passenger to be saved.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task<Task> SavePassengerAsync(Passenger passenger);
+        Task<Task> SavePassengerAsync(PassengerCompenation passenger);
+
+        /// <summary>
+        /// Update the existing passenger record to the database.
+        /// </summary>
+        /// <param name="passenger">The passenger object containing the details of the passenger to be update.</param>
+        /// <returns>A task that represents the asynchronous operation.</returns>
+        Task<Task> UpdatePassengerAsync(PassengerCompenation passenger);
 
         /// <summary>
         /// Asynchronously retrieves a list of flights from the database.
@@ -38,7 +45,7 @@ namespace AirlineCoreLibrary.Service
         /// </summary>
         /// <param name="flightKey">The key identifying the flight for which the passengers need to be fetched.</param>
         /// <returns>A task representing the asynchronous operation, with a list of passengers as the result.</returns>
-        Task<List<Passenger>> GetPassengersAsync(string flightKey);
+        Task<List<PassengerCompenation>> GetPassengersAsync(string flightKey);
 
 
     }

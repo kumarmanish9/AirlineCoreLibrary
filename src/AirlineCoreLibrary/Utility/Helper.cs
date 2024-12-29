@@ -39,9 +39,9 @@ namespace AirlineCoreLibrary.Utility
         /// </summary>
         /// <param name="passenger">The passenger for which the key will be generated.</param>
         /// <returns>A string representing the passenger key.</returns>
-        public static string GeneratePassengerKey(this Passenger passenger)
+        public static string GeneratePassengerKey(this PassengerCompenation passenger)
         {
-            return $"{passenger.Pnr}_{passenger.FirstName}_{passenger.LastName}";
+            return $"{passenger.PNR}_{passenger.FirstName}_{passenger.LastName}";
         }
 
 

@@ -10,7 +10,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
     public class PassengerService(IDatabaseService databaseService) : IPassengerService
     {
         /// <inheritdoc />
-        public async Task<List<Passenger>?> GetPassengers(string flightKey)
+        public async Task<List<PassengerCompenation>?> GetPassengers(string flightKey)
         {
             try
             {

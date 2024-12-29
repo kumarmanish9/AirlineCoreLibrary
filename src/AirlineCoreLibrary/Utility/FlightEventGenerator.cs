@@ -1,4 +1,5 @@
 ﻿using AirlineCoreLibrary.Model;
+using Org.BouncyCastle.Asn1.Cmp;
 
 namespace AirlineCoreLibrary.Utility
 {
@@ -14,6 +15,9 @@ namespace AirlineCoreLibrary.Utility
             var arrival = DataProvider.Arrivals.Except(new[] { departure }).ElementAt(_random.Next(DataProvider.Arrivals.Length - 1));// Ensure arrival != departure
             var scheduledDate = DateTime.Now.AddDays(_random.Next(1, 2)).ToString("yyyy-MM-dd"); // Random future date
             var numberOfPax = _random.Next(1, 50).ToString(); // Random number of passengers (1-5)
+            var delayInMinutes = _random.Next(100, 480);
+            var eventReason = DataProvider.EventReason[_random.Next(DataProvider.EventReason.Length)];
+            var eventType = DataProvider.EventType[_random.Next(DataProvider.EventType.Length)];
 
             var flight = new Flight
             {
@@ -21,7 +25,11 @@ namespace AirlineCoreLibrary.Utility
                 Departure = departure,
                 Arrival = arrival,
                 ScheduledDate = scheduledDate,
-                NumberOfPax = numberOfPax
+                NumberOfPax = numberOfPax,
+                DelayInMinutes = delayInMinutes,
+                EventReason = eventReason,
+                EventType = eventType,
+                IsOvernight = _random.Next(0, 1) == 1,
             };
 
             // Generate random passengers
@@ -32,15 +40,26 @@ namespace AirlineCoreLibrary.Utility
                 var firstName = DataProvider.FirstNames[_random.Next(DataProvider.FirstNames.Length)];
                 var lastName = DataProvider.LastNames[_random.Next(DataProvider.LastNames.Length)];
                 var email = DataProvider.Emails[_random.Next(DataProvider.Emails.Length)];
+                var cabinType = DataProvider.CabinType[_random.Next(DataProvider.CabinType.Length)];
+                var paxStatus = DataProvider.PaxStatus[_random.Next(DataProvider.PaxStatus.Length)];
                 var phone = GenerateRandomPhoneNumber();
 
-                return new Passenger
+                return new PassengerCompenation
                 {
+                    FlightKey = null,
                     FirstName = firstName,
                     LastName = lastName,
                     Phone = phone,
                     Email = email,
-                    Pnr = pnr
+                    PNR = pnr,
+                    CabinType = cabinType,
+                    PaxStatus = paxStatus,
+                    Requester = "Auto",
+                    AgentRemarks = "NA",
+                    CompStatus = null,
+                    Compensation = null,
+                    IsEligible = null,
+                    PassengerKey = null
                 };
             }).ToArray();
 

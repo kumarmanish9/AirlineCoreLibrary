@@ -46,9 +46,22 @@ namespace AirlineCoreLibrary.ServiceDefinition
             AppLogger.LogInfo("Saving flight", flight);
 
             var query = @"
-            INSERT IGNORE INTO Flight (FlightKey, FlightNumber, Departure, Arrival, ScheduledDate, NumberOfPax)
-            VALUES (@FlightKey, @FlightNumber, @Departure, @Arrival, @ScheduledDate, @NumberOfPax)";
+                INSERT INTO Flight 
+                (FlightKey, FlightNumber, Departure, Arrival, ScheduledDate, EventType, EventReason, IsOvernight, DelayInMinutes, NumberOfPax) 
+                VALUES 
+                (@FlightKey, @FlightNumber, @Departure, @Arrival, @ScheduledDate, @EventType, @EventReason, @IsOvernight, @DelayInMinutes, @NumberOfPax)
+                ON DUPLICATE KEY UPDATE
+                FlightNumber = VALUES(FlightNumber),
+                Departure = VALUES(Departure),
+                Arrival = VALUES(Arrival),
+                ScheduledDate = VALUES(ScheduledDate),
+                EventType = VALUES(EventType),
+                EventReason = VALUES(EventReason),
+                IsOvernight = VALUES(IsOvernight),
+                DelayInMinutes = VALUES(DelayInMinutes),
+                NumberOfPax = VALUES(NumberOfPax)";
 
+            // Open the database connection and execute the command
             using (var connection = GetConnection())
             {
                 await connection.OpenAsync();
@@ -59,6 +72,10 @@ namespace AirlineCoreLibrary.ServiceDefinition
                     cmd.Parameters.AddWithValue("@Departure", flight.Departure);
                     cmd.Parameters.AddWithValue("@Arrival", flight.Arrival);
                     cmd.Parameters.AddWithValue("@ScheduledDate", flight.ScheduledDate);
+                    cmd.Parameters.AddWithValue("@EventType", flight.EventType);
+                    cmd.Parameters.AddWithValue("@EventReason", flight.EventReason);
+                    cmd.Parameters.AddWithValue("@IsOvernight", flight.IsOvernight);
+                    cmd.Parameters.AddWithValue("@DelayInMinutes", flight.DelayInMinutes);
                     cmd.Parameters.AddWithValue("@NumberOfPax", flight.NumberOfPax);
 
                     await cmd.ExecuteNonQueryAsync();
@@ -69,30 +86,110 @@ namespace AirlineCoreLibrary.ServiceDefinition
         }
 
         /// <inheritdoc />
-        public async Task<Task> SavePassengerAsync(Passenger passenger)
+        public async Task<Task> SavePassengerAsync(PassengerCompenation passenger)
         {
-            AppLogger.LogInfo("Saving passenger", passenger);
-            var query = @"
-            INSERT IGNORE INTO Passenger (PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, Compensation, Status)
-            VALUES (@PassengerKey, @FlightKey, @Pnr, @FirstName, @LastName, @Phone, @Email, @Compensation, @Status)";
-
-            using (var connection = GetConnection())
+            try
             {
-                await connection.OpenAsync();
-                using (var cmd = new MySqlCommand(query, connection))
-                {
-                    cmd.Parameters.AddWithValue("@PassengerKey", passenger.PassengerKey);
-                    cmd.Parameters.AddWithValue("@FlightKey", passenger.FlightKey);
-                    cmd.Parameters.AddWithValue("@Pnr", passenger.Pnr);
-                    cmd.Parameters.AddWithValue("@FirstName", passenger.FirstName);
-                    cmd.Parameters.AddWithValue("@LastName", passenger.LastName);
-                    cmd.Parameters.AddWithValue("@Phone", passenger.Phone);
-                    cmd.Parameters.AddWithValue("@Email", passenger.Email);
-                    cmd.Parameters.AddWithValue("@Compensation", passenger.Compensation);
-                    cmd.Parameters.AddWithValue("@Status", passenger.Status);
+                AppLogger.LogInfo("Saving passenger with PassengerKey: ", passenger.PassengerKey);
 
-                    await cmd.ExecuteNonQueryAsync();
+                var query = @"
+                    INSERT INTO Passenger 
+                    (PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, EventReason, CabinType, PaxStatus, IsEligible, Compensation, Status, AgentRemarks, Requester)
+                    VALUES 
+                    (@PassengerKey, @FlightKey, @Pnr, @FirstName, @LastName, @Phone, @Email, @EventReason, @CabinType, @PaxStatus, @IsEligible, @Compensation, @CompStatus, @AgentRemarks, @Requester)";
+
+                using (var connection = GetConnection())
+                {
+                    await connection.OpenAsync();
+
+                    using (var cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@PassengerKey", passenger.PassengerKey);
+                        cmd.Parameters.AddWithValue("@FlightKey", passenger.FlightKey);
+                        cmd.Parameters.AddWithValue("@Pnr", passenger.PNR);
+                        cmd.Parameters.AddWithValue("@FirstName", passenger.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", passenger.LastName);
+                        cmd.Parameters.AddWithValue("@Phone", passenger.Phone);
+                        cmd.Parameters.AddWithValue("@Email", passenger.Email);
+                        cmd.Parameters.AddWithValue("@EventReason", passenger.EventReason);
+                        cmd.Parameters.AddWithValue("@CabinType", passenger.CabinType);
+                        cmd.Parameters.AddWithValue("@PaxStatus", passenger.PaxStatus);
+                        cmd.Parameters.AddWithValue("@IsEligible", passenger.IsEligible);
+                        cmd.Parameters.AddWithValue("@Compensation", passenger.Compensation);
+                        cmd.Parameters.AddWithValue("@CompStatus", passenger.CompStatus);
+                        cmd.Parameters.AddWithValue("@AgentRemarks", passenger.AgentRemarks);
+                        cmd.Parameters.AddWithValue("@Requester", passenger.Requester);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
                 }
+
+                AppLogger.LogInfo("Passenger saved successfully", passenger);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.LogError("Error saving passenger: ", ex);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public async Task<Task> UpdatePassengerAsync(PassengerCompenation passenger)
+        {
+            try
+            {
+                AppLogger.LogInfo("Updating passenger with PassengerKey: ", passenger.PassengerKey);
+
+                var query = @"
+                    UPDATE Passenger 
+                    SET 
+                        FlightKey = @FlightKey,
+                        Pnr = @Pnr,
+                        FirstName = @FirstName,
+                        LastName = @LastName,
+                        Phone = @Phone,
+                        Email = @Email,
+                        EventReason = @EventReason,
+                        CabinType = @CabinType,
+                        PaxStatus = @PaxStatus,
+                        IsEligible = @IsEligible,
+                        Compensation = @Compensation,
+                        Status = @CompStatus,
+                        AgentRemarks = @AgentRemarks,
+                        Requester = @Requester
+                    WHERE PassengerKey = @PassengerKey";
+
+                using (var connection = GetConnection())
+                {
+                    await connection.OpenAsync();
+
+                    using (var cmd = new MySqlCommand(query, connection))
+                    {
+                        cmd.Parameters.AddWithValue("@PassengerKey", passenger.PassengerKey);
+                        cmd.Parameters.AddWithValue("@FlightKey", passenger.FlightKey);
+                        cmd.Parameters.AddWithValue("@Pnr", passenger.PNR);
+                        cmd.Parameters.AddWithValue("@FirstName", passenger.FirstName);
+                        cmd.Parameters.AddWithValue("@LastName", passenger.LastName);
+                        cmd.Parameters.AddWithValue("@Phone", passenger.Phone);
+                        cmd.Parameters.AddWithValue("@Email", passenger.Email);
+                        cmd.Parameters.AddWithValue("@EventReason", passenger.EventReason);
+                        cmd.Parameters.AddWithValue("@CabinType", passenger.CabinType);
+                        cmd.Parameters.AddWithValue("@PaxStatus", passenger.PaxStatus);
+                        cmd.Parameters.AddWithValue("@IsEligible", passenger.IsEligible);
+                        cmd.Parameters.AddWithValue("@Compensation", passenger.Compensation);
+                        cmd.Parameters.AddWithValue("@CompStatus", passenger.CompStatus);
+                        cmd.Parameters.AddWithValue("@AgentRemarks", passenger.AgentRemarks);
+                        cmd.Parameters.AddWithValue("@Requester", passenger.Requester);
+
+                        await cmd.ExecuteNonQueryAsync();
+                    }
+                }
+
+                AppLogger.LogInfo("Passenger updated successfully", passenger);
+            }
+            catch (Exception ex)
+            {
+                AppLogger.LogError("Error updating passenger: ", ex);
             }
 
             return Task.CompletedTask;
@@ -111,7 +208,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 using (var connection = GetConnection())
                 {
                     await connection.OpenAsync();
-                    string query = "SELECT * FROM Flight";
+                    string query = "SELECT FlightKey, FlightNumber, Departure, Arrival, ScheduledDate, NumberOfPax FROM Flight";
                     var command = new MySqlCommand(query, connection);
                     var reader = await command.ExecuteReaderAsync();
 
@@ -140,50 +237,63 @@ namespace AirlineCoreLibrary.ServiceDefinition
         }
 
         /// <inheritdoc />
-        /// <inheritdoc />
-        public async Task<List<Passenger>> GetPassengersAsync(string flightKey)
+        public async Task<List<PassengerCompenation>> GetPassengersAsync(string flightKey)
         {
-            List<Passenger> passengers = [];
+            List<PassengerCompenation> passengers = [];  // Correct initialization of the list
 
             try
             {
-                // Example database query logic (adjust this based on your actual database context)
                 using (var connection = GetConnection())
                 {
                     await connection.OpenAsync();
 
                     // Query to fetch passengers associated with the given flightKey
-                    string query = "SELECT * FROM Passenger WHERE FlightKey = @FlightKey"; // Adjust query as needed
+                    string query = @"
+                        SELECT PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, 
+                               EventReason, CabinType, PaxStatus, IsEligible, Compensation, Status, 
+                               AgentRemarks, Requester
+                        FROM Passenger 
+                        WHERE FlightKey = @FlightKey"; // Adjust query as needed
+
                     var command = new MySqlCommand(query, connection);
                     command.Parameters.AddWithValue("@FlightKey", flightKey);
-                    var reader = await command.ExecuteReaderAsync();
 
-                    while (await reader.ReadAsync())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        var passenger = new Passenger
+                        while (await reader.ReadAsync())
                         {
-                            PassengerKey = reader["PassengerKey"].ToString(),
-                            FlightKey = reader["FlightKey"].ToString(),
-                            Pnr = reader["Pnr"].ToString(),
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            Phone = reader["Phone"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            Compensation = reader["Compensation"].ToString(),
-                            Status = reader["Status"].ToString(),
-                        };
-                        passengers.Add(passenger);
+                            var passenger = new PassengerCompenation
+                            {
+                                PassengerKey = reader["PassengerKey"].ToString(),
+                                FlightKey = reader["FlightKey"].ToString(),
+                                PNR = reader["Pnr"].ToString(),
+                                FirstName = reader["FirstName"].ToString(),
+                                LastName = reader["LastName"].ToString(),
+                                Phone = reader["Phone"].ToString(),
+                                Email = reader["Email"].ToString(),
+                                EventReason = reader["EventReason"].ToString(),
+                                CabinType = reader["CabinType"].ToString(),
+                                PaxStatus = reader["PaxStatus"].ToString(),
+                                IsEligible = reader["IsEligible"] != DBNull.Value ? Convert.ToBoolean(reader["IsEligible"]) : (bool?)null,  // Nullable boolean
+                                Compensation = reader["Compensation"].ToString(),
+                                CompStatus = reader["Status"].ToString(),
+                                AgentRemarks = reader["AgentRemarks"].ToString(),
+                                Requester = reader["Requester"].ToString()
+                            };
+                            passengers.Add(passenger);
+                        }
                     }
                 }
             }
             catch (Exception ex)
             {
                 // Log or handle the error as appropriate
-                AppLogger.LogError("Error occurd while fetching passengers", ex);
+                AppLogger.LogError("Error occurred while fetching passengers", ex);
             }
 
             return passengers;
         }
+
 
     }
 }
