@@ -6,12 +6,10 @@
     public class RuleEngineRequest
     {
         public string? WorkflowName { get; set; }
-
         public string? EventType { get; set; }
         public string? EventReason { get; set; }
         public bool? IsOvernight { get; set; }
         public int? DelayInMinutes { get; set; }
-
         public string? CabinType { get; set; }
         public string? PaxStatus { get; set; }
     }

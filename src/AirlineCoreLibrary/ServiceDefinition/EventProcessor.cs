@@ -25,11 +25,22 @@ namespace AirlineCoreLibrary.ServiceDefinition
                     string[] filePaths = Directory.GetFiles(directoryPath, "*.json");
                     if (filePaths.Length > 0)
                     {
-                        // Process each file in parallel
-                        await Parallel.ForEachAsync(filePaths, async (filePath, cancellationToken) =>
+                        if (CoreConstants.IsParrallExecution)
                         {
-                            await ProcessEventMessage(filePath);
-                        });
+                            // Process each file in parallel
+                            await Parallel.ForEachAsync(filePaths, async (filePath, cancellationToken) =>
+                            {
+                                await ProcessEventMessage(filePath);
+                            });
+                        }
+                        else
+                        {
+                            // Process each file in sequence
+                            foreach (string filePath in filePaths)
+                            {
+                                await ProcessEventMessage(filePath);
+                            }
+                        }
                     }
                     else
                     {
@@ -75,18 +86,35 @@ namespace AirlineCoreLibrary.ServiceDefinition
                     await database.SaveFlightAsync(flightEvent.Flight);
 
                     // Save/Update passenger details in parallel
-                    var savePassengerTasks = flightEvent.Passengers.Select(async passenger =>
+                    if (CoreConstants.IsParrallExecution)
                     {
-                        passenger.PassengerKey = passenger.GeneratePassengerKey();
-                        passenger.FlightKey = flightEvent.Flight.FlightKey;
-                        await database.SavePassengerAsync(passenger);
+                        var savePassengerTasks = flightEvent.Passengers.Select(async passenger =>
+                        {
+                            passenger.PassengerKey = passenger.GeneratePassengerKey();
+                            passenger.FlightKey = flightEvent.Flight.FlightKey;
+                            passenger.EventReason = flightEvent.Flight.EventReason;
+                            await database.SavePassengerAsync(passenger);
 
-                        // Compensation Eligibility and Processing
-                        await compensation.ProcessCompensationAsync(flightEvent.Flight, passenger);
-                    });
+                            // Compensation Eligibility and Processing
+                            await compensation.ProcessCompensationAsync(flightEvent.Flight, passenger);
+                        });
 
-                    // Wait for all passenger save tasks to complete
-                    await Task.WhenAll(savePassengerTasks);
+                        // Wait for all passenger save tasks to complete
+                        await Task.WhenAll(savePassengerTasks);
+                    }
+                    else
+                    {
+                        foreach (var passenger in flightEvent.Passengers)
+                        {
+                            passenger.PassengerKey = passenger.GeneratePassengerKey();
+                            passenger.FlightKey = flightEvent.Flight.FlightKey;
+                            passenger.EventReason = flightEvent.Flight.EventReason;
+                            await database.SavePassengerAsync(passenger);
+
+                            // Compensation Eligibility and Processing
+                            await compensation.ProcessCompensationAsync(flightEvent.Flight, passenger);
+                        }
+                    }
                 }
                 else
                 {

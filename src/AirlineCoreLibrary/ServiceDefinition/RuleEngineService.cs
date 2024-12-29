@@ -13,17 +13,16 @@ namespace AirlineCoreLibrary.ServiceDefinition
         /// ExecuteRuleEngineRequest
         /// </summary>
         /// <param name="ruleEngineRequest"></param>
-        /// <param name="requestId"></param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public RuleEngineResponse ExecuteRuleEngineRequest(RuleEngineRequest ruleEngineRequest, string requestId)
+        public RuleEngineResponse ExecuteRuleEngineRequest(RuleEngineRequest ruleEngineRequest)
         {
             RuleEngineResponse ruleEngineResponse = new ();
             string reasonCode = string.Empty;
 
             try
             {
-                string rulesFile = CoreConstants.WorkFlowPath;
+                string rulesFile = CoreConstants.BREWorkFlowPath;
                 //var rulesFile = Directory.GetFiles(Directory.GetCurrentDirectory(), "workflowdata.json", SearchOption.AllDirectories).FirstOrDefault();
 
                 if (rulesFile == null || rulesFile.Length == 0)
@@ -39,26 +38,37 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 var ruleEngineWF = new RulesEngine.RulesEngine(workflow?.ToArray(), null);
                 var ruleParam = new RuleParameter("input", ruleEngineRequest);
                 resultList = ruleEngineWF.ExecuteAllRulesAsync(ruleEngineRequest.WorkflowName?.ToLowerInvariant(), ruleParam).Result;
+                
                 resultList.OnSuccess((successResponse) =>
                 {
+                    ruleEngineResponse.IsEligible = true;
+                    ruleEngineResponse.Compensation = successResponse;
                     ruleEngineResponse.ReasonCode = successResponse;
                     ruleEngineResponse.Remarks = "Success";
                 });
                 resultList.OnFail(() =>
                 {
-                    ruleEngineResponse.ReasonCode = string.Empty;
+                    ruleEngineResponse.IsEligible = false;
+                    ruleEngineResponse.Compensation = null;
+                    ruleEngineResponse.ReasonCode = "Failed";
                     ruleEngineResponse.Remarks = "Failed: Reason code not found for given criteria!";
                 });
                 #endregion
-
             }
             catch (Exception ex)
             {
-                ruleEngineResponse.ReasonCode = string.Empty;
+                ruleEngineResponse.ReasonCode = null;
                 ruleEngineResponse.Remarks = $"Exception: Something went wrong, please make sure input values and expression are correct!\nError: {ex.Message}";
             }
+
+            if (ruleEngineResponse.ReasonCode == null && ruleEngineRequest.DelayInMinutes >= 100 && ruleEngineRequest.DelayInMinutes <= 300)
+            {
+                AppLogger.LogWarning($"Message: Delay is between 100 and 300 minutes, so offering Voucher");
+                ruleEngineResponse.ReasonCode = "Voucher";
+                ruleEngineResponse.Remarks = "Success";
+            }
+
             return ruleEngineResponse;
         }
-
     }
 }

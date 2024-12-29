@@ -99,7 +99,7 @@
         ];
 
         public static string[] Compensations = [
-            "Hotel", "Meal", "Hotel+Meal", "Voucher", "Miles"
+            "Hotel", "Meal", "HotelAndMeal", "Voucher", "Miles"
         ];
 
         public static string[] CompStatus = [
@@ -107,7 +107,7 @@
         ];
 
         public static string[] EventType = [
-            "Controllable", "Uncontrollable"
+            "Controllable", "UnControllable"
         ];
 
         public static string[] EventReason = [

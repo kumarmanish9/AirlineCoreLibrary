@@ -2,12 +2,7 @@
 using AirlineCoreLibrary.Service;
 using AirlineCoreLibrary.Utility;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AirlineCoreLibrary.ServiceDefinition
 {
@@ -26,7 +21,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 CabinType = passenger?.CabinType,
                 PaxStatus = passenger?.PaxStatus,
 
-                WorkflowName = "CompensationWorkflow"
+                WorkflowName = flight?.EventType
             };
 
             // Invoke BRE API

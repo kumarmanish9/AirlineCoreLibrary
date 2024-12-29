@@ -22,7 +22,7 @@
     public enum EventType
     {
         Controllable,
-        Uncontrollable
+        UnControllable
     }
 
     public enum CabinType

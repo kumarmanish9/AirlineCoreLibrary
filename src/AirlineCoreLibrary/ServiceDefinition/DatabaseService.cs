@@ -93,7 +93,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 AppLogger.LogInfo("Saving passenger with PassengerKey: ", passenger.PassengerKey);
 
                 var query = @"
-                    INSERT INTO Passenger 
+                    INSERT INTO PassengerCompensation 
                     (PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, EventReason, CabinType, PaxStatus, IsEligible, Compensation, Status, AgentRemarks, Requester)
                     VALUES 
                     (@PassengerKey, @FlightKey, @Pnr, @FirstName, @LastName, @Phone, @Email, @EventReason, @CabinType, @PaxStatus, @IsEligible, @Compensation, @CompStatus, @AgentRemarks, @Requester)";
@@ -141,7 +141,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                 AppLogger.LogInfo("Updating passenger with PassengerKey: ", passenger.PassengerKey);
 
                 var query = @"
-                    UPDATE Passenger 
+                    UPDATE PassengerCompensation
                     SET 
                         FlightKey = @FlightKey,
                         Pnr = @Pnr,
@@ -252,7 +252,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                         SELECT PassengerKey, FlightKey, Pnr, FirstName, LastName, Phone, Email, 
                                EventReason, CabinType, PaxStatus, IsEligible, Compensation, Status, 
                                AgentRemarks, Requester
-                        FROM Passenger 
+                        FROM PassengerCompensation 
                         WHERE FlightKey = @FlightKey"; // Adjust query as needed
 
                     var command = new MySqlCommand(query, connection);

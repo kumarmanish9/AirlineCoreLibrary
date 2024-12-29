@@ -52,7 +52,7 @@ CREATE TABLE CompensationHistory (
     PRIMARY KEY (Id)                         -- Sets Id as the primary key
 );
 
-
+-- truncate table CompensationHistory
 Select * from Flight;
 Select * from PassengerCompensation;
 Select * from CompensationHistory;

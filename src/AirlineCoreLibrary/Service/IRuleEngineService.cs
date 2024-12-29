@@ -11,9 +11,8 @@ namespace AirlineCoreLibrary.Service
         /// ExecuteRuleEngineRequest
         /// </summary>
         /// <param name="ruleEngineRequest"></param>
-        /// <param name="requestId"></param>
         /// <returns></returns>
-        RuleEngineResponse ExecuteRuleEngineRequest(RuleEngineRequest ruleEngineRequest, string requestId);
+        RuleEngineResponse ExecuteRuleEngineRequest(RuleEngineRequest ruleEngineRequest);
 
     }
 }
