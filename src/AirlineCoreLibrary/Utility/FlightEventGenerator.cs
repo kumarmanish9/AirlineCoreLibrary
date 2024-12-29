@@ -39,7 +39,7 @@ namespace AirlineCoreLibrary.Utility
             {
                 var firstName = DataProvider.FirstNames[_random.Next(DataProvider.FirstNames.Length)];
                 var lastName = DataProvider.LastNames[_random.Next(DataProvider.LastNames.Length)];
-                var email = DataProvider.Emails[_random.Next(DataProvider.Emails.Length)];
+                var email = DataProvider.UserEmails[_random.Next(DataProvider.UserEmails.Length)];
                 var cabinType = DataProvider.CabinType[_random.Next(DataProvider.CabinType.Length)];
                 var paxStatus = DataProvider.PaxStatus[_random.Next(DataProvider.PaxStatus.Length)];
                 var phone = GenerateRandomPhoneNumber();

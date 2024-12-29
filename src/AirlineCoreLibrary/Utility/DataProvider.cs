@@ -63,10 +63,10 @@
                 "Medina", "Fowler", "Brewer", "Hoffman", "Carlson", "Silva", "Pearson", "Holland", "Douglas", "Fleming"
             ];
 
-        public static string[] Emails = [
-            "engmanishk@gmail.com",
+        public static string[] UserEmails = [
             "rowdymanish47@gmail.com",
-            "mca23167@glbitm.ac.in"
+            "np527282@gmail.com",
+            "rahulrai37792@gmail.com"
         ];
 
         public static string[] FlightNumbers = [
