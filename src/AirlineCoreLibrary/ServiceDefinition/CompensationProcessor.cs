@@ -39,7 +39,7 @@ namespace AirlineCoreLibrary.ServiceDefinition
                     // BRE compensation response update in the database
                     passenger.Compensation = ruleEngineResult.Compensation;
                     passenger.IsEligible = isEligible;
-                    passenger.CompStatus = isEligible ? nameof(CompStatus.Pending) : nameof(CompStatus.NotEligible);
+                    passenger.CompStatus = isEligible ? nameof(CompStatus.Offered) : nameof(CompStatus.NotEligible);
                     passenger.AgentRemarks = ruleEngineResult.Remarks;
                     
                     await database.UpdatePassengerAsync(passenger);
